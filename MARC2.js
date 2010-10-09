@@ -980,6 +980,17 @@ Marc.Record.prototype = {
 	},
 
 	/**
+	 * Get the catalog language from 100
+	 * @returns {String} the ISO-code of the catalog language.
+	 */
+	getCatalogLanguage : function() {
+		var value = getValue(Marc.Unimarc.Tags.GENERAL_PROCESSING_DATA);
+		if(value) {
+			return value.substr(22, 3);
+		}
+	},
+	
+	/**
 	 * @param {String|String[]|Object|Object[]|RegExp} tag specifies tags
 	 * @returns {boolean} true if at least one field matches the supplied tag
 	 */
@@ -2649,18 +2660,29 @@ Marc.UnimarcMultilingualImportConverter = function() {
 Marc.UnimarcMultilingualImportConverter.prototype = new Marc.UnimarcImportConverter;
 Marc.UnimarcMultilingualImportConverter.prototype.constructor = Marc.UnimarcMultilingualImportConverter;
 
+Marc.UnimarcMultilingualImportConverter.prototype._getLanguage = function(record, item) {
+	var value = record.getValue(Marc.Unimarc.Tags.LANGUAGE_OF_THE_ITEM, "a");
+	if(value) {
+		item.language = value.split(" ")[0];
+	}
+	//Original language?
+	value = record.getValue(Marc.Unimarc.Tags.LANGUAGE_OF_THE_ITEM, "c");
+	if(value) {
+		item.notes.push({note: "Original language: " + value});
+	}
+};
+
+
 Marc.UnimarcMultilingualImportConverter.prototype._getTitle = function(record, item) {
-	Zotero.debug("Marc.UnimarcMultilingualImportConverter.prototype._getTitle");
 	var value = false, lang, script;
 	var defLang = item.language.split(" ")[0];
 	//Commit and reset
 	var commit = function() {
 		if(value) {
 			if(script) {
-				lang = (lang ? lang : defLang) + "-" + script;
+				var l = lang ? lang : defLang;
+				lang = l + "-" + script;
 			}
-			Zotero.debug("Committing multilingual title: " + value
-					+ "/ lang: " + lang);
 			this._setMultiField(item, "title", value, lang);
 		}
 		value = false;
@@ -2693,7 +2715,17 @@ Marc.UnimarcMultilingualImportConverter.prototype._getTitle = function(record, i
 				break;
 			}
 		}
-		commit.call(this);
+		if(titleField.getTag() == Marc.Unimarc.Tags.PARALLEL_TITLE_PROPER.tag) {
+			if(lang == null) {
+				lang = record.getCatalogLanguage();
+			}
+			if(lang) {
+				commit.call(this);
+			}
+		}
+		else {
+			commit.call(this);
+		}
 	}, this);
 };
 
@@ -2737,7 +2769,6 @@ Marc.Converters = {
 		}
 		
 		var multilingual = this._isMultilingual();
-		Zotero.debug("getImportConverter, type=" + type + ", multilingual=" + multilingual);
 
 		switch(type) {
 		case "unimarc":
@@ -2933,7 +2964,7 @@ Marc.Config.setTypeOptions();
 //Public API
 
 //Debugging
-Marc.IO.setMaxImportRecords(5);
+Marc.IO.setMaxImportRecords(10);
 
 /**
  * Detect binary record leader.
