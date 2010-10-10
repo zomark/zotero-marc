@@ -5,13 +5,14 @@ to be gained and much to be lost by hurrying things in such a central place
 as the MARC engine is - this is just meant as a starting point.
 
 Follwing just another one of Avram's suggestions, I am trying to
-explore Frank Benett's multilingual Zotero extensions (see
-http://gsl-nagoya-u.net/http/pub/zotero-multilingual-overview.html) and their
+explore [Frank Benett's multilingual Zotero extensions](http://gsl-nagoya-u.net/http/pub/zotero-multilingual-overview.html) and their
 possible integration with MARC.
 
-Project contents:
+Project contents
+----------------
 
-- An importer Marc2.js, capable of importing binary Unimarc- and
+* An importer [Marc2.js](http://github.com/zomark/zotero-marc/blob/master/MARC2.js), 
+capable of importing binary Unimarc- and
 Marc-21 files. My import tests have been very limited, though.
 Marc2.js also exposes a "Marc" namespace which is the entry point for
 translators using the module. This namespace attempts to model MARC
@@ -20,17 +21,18 @@ constants and helper classes that clients can use to convert between
 Zotero items, MARC records and external MARC representations (textual
 or binary).
 
-- the JSDoc-generated docs for Marc2.js (obviously insufficient)
+* the JSDoc-generated [docs](http://github.com/zomark/zotero-marc/tree/master/doc/) for Marc2.js (obviously insufficient)
 
-- two translators using Marc2.js. The examples intends to demonstrate how Marc translators 
+* two translators using Marc2.js. The examples intends to demonstrate how Marc translators 
 could become a little cleaner and maybe easier to maintain:
-Library Catalog (Dynix)2.js (http://www.babord.univ-bordeaux.fr)
-Catalog Collectif de France.js (http://www.ccfr.bnf.fr)
+- [Library Catalog (Dynix)2.js](http://github.com/zomark/zotero-marc/blob/master/Library%20Catalog%20(Dynix)2.js) 
+	(test [here]http://www.babord.univ-bordeaux.fr))
+- [Catalog Collectif de France.js](http://github.com/zomark/zotero-marc/blob/master/Catalogue%20Collectif%20de%20France.js) 
+	(test [here](http://www.ccfr.bnf.fr))
 
-- sample data in binary MARC format in ./sampledata
+* [sample data](http://github.com/zomark/zotero-marc/tree/master/sampledata/) in binary MARC format
 
-- some proposed patches concerning the multilingual features in the
-./chrome subfolder
+* some proposed [patches](http://github.com/zomark/zotero-marc/tree/master/sampledata/) concerning the multilingual features
 
 There is nothing revolutionary in this, and the current MARC support
 works fine, thanks to all the guys who contributed to it. I just
