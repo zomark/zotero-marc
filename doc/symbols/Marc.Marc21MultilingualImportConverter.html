@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - Marc.ImportConverter</title>
+		<title>JsDoc Reference - Marc.Marc21MultilingualImportConverter</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -250,15 +250,17 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class Marc.ImportConverter
+				Class Marc.Marc21MultilingualImportConverter
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
+				<br />Extends
+					<a href="../symbols/Marc.ImportConverter.html">Marc.ImportConverter</a>.<br />
 				
 			
-				ImportConverters create Zotero items from a given Marc record.This is an abstract base class; derived classes must take actions  for a specific Marc format.
+				ImportConverter implementation for records in Marc-21 format.Makes use of Zotero's multilingual features wherever possible.
 				
 				
 					<br /><i>Defined in: </i> <a href="../symbols/src/C__workspace_zotero-trunk-multilingual_translators_MARC2.js.html">MARC2.js</a>.
@@ -267,7 +269,7 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Marc.ImportConverter.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class Marc.Marc21MultilingualImportConverter.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -280,9 +282,9 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/Marc.ImportConverter.html#constructor">Marc.ImportConverter</a></b>()
+								<b><a href="../symbols/Marc.Marc21MultilingualImportConverter.html#constructor">Marc.Marc21MultilingualImportConverter</a></b>()
 							</div>
-							<div class="description">Constructs an ImportConverter.</div>
+							<div class="description">Constructs a multilingual Marc-21 import converter.</div>
 						</td>
 					</tr>
 				</tbody>
@@ -296,38 +298,11 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class Marc.ImportConverter.">
-					<caption>Method Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Method Attributes</th>
-							<th scope="col">Method Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/Marc.ImportConverter.html#_addTag">_addTag</a></b>(item, tag)
-								</div>
-								<div class="description">Add tag, if not present yet in the item.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/Marc.ImportConverter.html#convert">convert</a></b>(the)
-								</div>
-								<div class="description">Takes a MARC record and return a Zotero item.</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
 				
 				
+				<dl class="inheritsList">
+				<dt>Methods borrowed from class <a href="../symbols/Marc.ImportConverter.html">Marc.ImportConverter</a>: </dt><dd><a href="../symbols/Marc.ImportConverter.html#_addTag">_addTag</a>, <a href="../symbols/Marc.ImportConverter.html#convert">convert</a></dd>
+				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
@@ -341,11 +316,11 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>Marc.ImportConverter</b>()
+						<b>Marc.Marc21MultilingualImportConverter</b>()
 				</div>
 				
 				<div class="description">
-					Constructs an ImportConverter.
+					Constructs a multilingual Marc-21 import converter.
 					
 				</div>
 				
@@ -367,96 +342,6 @@ ul.inheritsList
 			
 
 <!-- ============================== method details ========================= -->		
-			
-				<div class="sectionTitle">
-					Method Detail
-				</div>
-				
-					<a name="_addTag"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>_addTag</b>(item, tag)
-					
-					</div>
-					<div class="description">
-						Add tag, if not present yet in the item.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Zotero.Item}</span> <b>item</b>
-									
-								</dt>
-								<dd>the target item</dd>
-							
-								<dt>
-									<span class="light fixedFont">{String}</span> <b>tag</b>
-									
-								</dt>
-								<dd>a tag to be added</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="convert"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{Zotero.Item}</span>
-					<b>convert</b>(the)
-					
-					</div>
-					<div class="description">
-						Takes a MARC record and return a Zotero item. Creates an empty item and calls the _getXXX methods of this class. Subclasses do not necessarily need to override this method, it may suffice to override the _getXXX member functions.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Marc.Record.html">Marc.Record</a>}</span> <b>the</b>
-									
-								</dt>
-								<dd>Marc record to be converted</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Zotero.Item}</span> an item filled with the record's data</dd>
-							
-							</dl>
-						
-						
-						
-
-					
-				
 			
 			
 <!-- ============================== event details ========================= -->		
