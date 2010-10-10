@@ -351,6 +351,21 @@ Marc.Marc21 = {
 		default:
 			return "contributor";
 		}
+	},
+	
+	/** Match an MARC-21 script code to IANA. 
+	 * @param {String} code A MARC-21 script code
+	 * @returns {String}
+	 * @see <a href="http://www.loc.gov/marc/bibliographic/ecbdcntf.html">MARC Manual</a> 
+	 * @see <a href="http://www.iana.org/assignments/language-subtag-registry">IANA list</a> 
+	 */
+	Scripts : {
+		"3" : "Arab",	//Arabic
+		"B" : "Latn",
+		"1" : "Hans",	//Chinese, Japanese, Korean (?? assume Hans)
+		"N" : "Cyrl",	//Cyrillic
+		"S" : "Grek",	//Greek
+		"2" : "Hebr"
 	}
 };
 
@@ -1517,6 +1532,14 @@ Marc.Record.Field.prototype = {
 	}, 
 
 	/**
+	 * Get the parent record.
+	 * @returns {Marc.Record}
+	 */
+	getRecord : function() {
+		return this._record;
+	},
+	
+	/**
 	 * @returns {String} the three-digit tag of this field.
 	 */
 	getTag : function() {
@@ -2138,6 +2161,33 @@ Marc.Marc21ImportConverter.prototype._clean = function(value) {
 	return value;
 };
 
+/** Get a linked 880 field.
+ *  @param {Marc.Record.Field} field 
+ *  @returns {Marc.RecordField} 
+ */
+Marc.Marc21ImportConverter.prototype._getLinkedField = function(field) {
+	var link = field.getValue("6");
+	if(link && link.length) {
+		var linkData = /(\d{3})-(\d+)/.exec(link);
+		if(linkData) {
+			return field.getRecord().getFields(linkData[1])[parseInt(linkData[2], 10) - 1];
+		}
+	}
+};
+
+/**
+ * From a linked field, try to extract script information.
+ * @param {Marc.Record.Field} field a linked 880 field
+ * @return {String} a IANA script code
+ */
+Marc.Marc21ImportConverter.prototype._getLinkScript = function(field) {
+	var link = field.getValue("6");
+	var linkData = /(\d{3})-(\d+)\/?([^\/]+)?/.exec(link);
+	if(linkData && linkData[3]) {
+		return Marc.Marc21.Scripts[linkData[3].substr(1)];
+	}
+};
+
 /** Number extraction */
 Marc.Marc21ImportConverter.prototype._pullNumber = function(text) {
 	var pullRe = /[0-9]+/;
@@ -2153,6 +2203,17 @@ Marc.Marc21ImportConverter.prototype._pullISBN = function(text) {
 	var m = pullRe.exec(text);
 	if(m) {
 		return m[0];
+	}
+};
+
+/** Language from 008, 35-37. */
+Marc.Marc21ImportConverter.prototype._getLanguage = function(record, item) {
+	var value = record.getValue(Marc.Marc21.Tags.FIXED_LENGTH_DATA_ELEMENTS);
+	if(value) {
+		var lang = value.substr(35, 3);
+		if(/[a-z]{3}/.test(lang)) {
+			item.language = lang;
+		}
 	}
 };
 
@@ -2272,6 +2333,243 @@ Marc.Marc21ImportConverter.prototype._getEdition = function(record, item) {
 	}
 
 };
+
+
+/**
+ * Constructs a multilingual Marc-21 import converter.
+ * @class ImportConverter implementation for records in Marc-21 format.
+ * Makes use of Zotero's multilingual features wherever possible.
+ * @augments Marc.ImportConverter 
+ * */
+Marc.Marc21MultilingualImportConverter = function() {
+};
+Marc.Marc21MultilingualImportConverter.prototype = new Marc.Marc21ImportConverter;
+Marc.Marc21MultilingualImportConverter.prototype.constructor = Marc.Marc21MultilingualImportConverter;
+
+
+Marc.Marc21ImportConverter.prototype._getCreator = function(field, item) {
+	//Linked items?
+	var linkedField = this._getLinkedField(field);
+	var linkedLang;
+	if(linkedField) {
+		var script = this._getLinkScript(linkedField);
+		if(script) {
+			linkedLang = item.language.split(" ")[0] + "-" + script;
+		}
+	}
+	
+	//Get names
+	var firstName, linkedFirstName;
+	var lastName, linkedLastName;
+	switch(field.getTag()) {
+	case Marc.Marc21.Tags.MAIN_ENTRY_PERSONAL_NAME.tag:
+	case Marc.Marc21.Tags.ADDED_ENTRY_PERSONAL_NAME.tag:
+		switch(field.getIndicator()[0]) {
+		case "0":
+			firstName = this._clean(field.getValue("ac", {subfieldJoin: ""}));
+			if(linkedField) {
+				linkedFirstName = this._clean(linkedField.getValue("ac", {subfieldJoin: ""}));
+			}
+			break;
+		case "1":
+			var value = field.getValue("a");
+			value = Zotero.Utilities.cleanAuthor(value, "author", true);
+			firstName = value.firstName;
+			lastName = value.lastName;
+			if(linkedField) {
+				value = linkedField.getValue("a");
+				value = Zotero.Utilities.cleanAuthor(value, "author", true);
+				linkedFirstName = value.firstName;
+				linkedLastName = value.lastName;
+			}
+			break;
+		case "3":
+		default:
+			lastName = this._clean(field.getValue("a"));
+			if(linkedField) {
+				linkedLastName = this._clean(linkedField.getValue("a"));
+			}
+		}
+		break;
+	case Marc.Marc21.Tags.MAIN_ENTRY_CORPORATE_NAME.tag:
+	case Marc.Marc21.Tags.MAIN_ENTRY_MEETING_NAME.tag:
+	case Marc.Marc21.Tags.ADDED_ENTRY_CORPORATE_NAME.tag:
+	case Marc.Marc21.Tags.ADDED_ENTRY_MEETING_NAME.tag:
+	default:
+		lastName = this._clean(field.getValue("a"));
+		if(linkedField) {
+			linkedLastName = this._clean(linkedField.getValue("a"));
+		}
+	}
+	
+	
+	//Loop through relators
+	var relators = field.getSubfields("e");
+	if(relators.length) {
+		relators.forEach(function(subfield) {
+			var relatorCode = subfield.getContent();
+			var creatorType = Marc.Marc21.getCreatorType(relatorCode);
+			if(creatorType) {
+				item.creators.push({firstName: firstName, lastName: lastName, creatorType: creatorType});
+				if(linkedField) {
+					var masterIndex = item.creators.length - 1;
+					item.creators.push({firstName: linkedFirstName, 
+						lastName: linkedLastName, 
+						creatorType: creatorType,
+						servantLang: linkedLang,
+						masterIndex: masterIndex});
+				}
+			}
+		});
+	}
+	else {
+		item.creators.push({firstName: firstName, lastName: lastName, creatorType: "author"});
+		if(linkedField) {
+			var masterIndex = item.creators.length - 1;
+			item.creators.push({firstName: linkedFirstName, 
+				lastName: linkedLastName, 
+				creatorType: "author",
+				servantLang: linkedLang,
+				masterIndex: masterIndex});
+		}
+	}
+	
+};
+
+
+Marc.Marc21MultilingualImportConverter.prototype._getEdition = function(record, item) {
+	var titleFields = record.getFields(Marc.Marc21.Tags.EDITION_STATEMENT);
+	var baseTitle = "";
+	var parallelTitles = [];
+	titleFields.forEach(function(titleField){
+		var value = titleField.getValue("ab");
+		if(baseTitle.length) {
+			baseTitle += " / ";
+		}
+		baseTitle += value;
+		//Check for linked field
+		var linkedField = this._getLinkedField(titleField);
+		if(linkedField) {
+			var script = this._getLinkScript(linkedField);
+			if(script) {
+				var value = this._clean(linkedField.getValue("ab"));
+				var lang = item.language.split(" ")[0] + "-" + script;
+				parallelTitles.push([value, lang]);
+			}
+		}
+	}, this);
+	if(baseTitle.length) {
+		item.edition = baseTitle;
+	}
+	parallelTitles.forEach(function(t) {
+		this._setMultiField(item, "edition", t[0], t[1]);
+	}, this);
+
+	
+	// Extract place info
+	titleFields = record.getFields(Marc.Marc21.Tags.PUBLICATION_DISTRIBUTION_ETC_IMPRINT);
+	baseTitle = "";
+	parallelTitles = [];
+	titleFields.forEach(function(titleField){
+		var value = titleField.getValue("a");
+		if(baseTitle.length) {
+			baseTitle += " / ";
+		}
+		baseTitle += value;
+		//Check for linked field
+		var linkedField = this._getLinkedField(titleField);
+		if(linkedField) {
+			var script = this._getLinkScript(linkedField);
+			if(script) {
+				var value = this._clean(linkedField.getValue("a"));
+				var lang = item.language.split(" ")[0] + "-" + script;
+				parallelTitles.push([value, lang]);
+			}
+		}
+	}, this);
+	if(baseTitle.length) {
+		item.place = baseTitle;
+	}
+	parallelTitles.forEach(function(t) {
+		this._setMultiField(item, "place", t[0], t[1]);
+	}, this);
+	
+	// Extract publisher/distributor
+	baseTitle = "";
+	parallelTitles = [];
+	titleFields.forEach(function(titleField){
+		var value = titleField.getValue("b");
+		if(baseTitle.length) {
+			baseTitle += " / ";
+		}
+		baseTitle += value;
+		//Check for linked field
+		var linkedField = this._getLinkedField(titleField);
+		if(linkedField) {
+			var script = this._getLinkScript(linkedField);
+			if(script) {
+				var value = this._clean(linkedField.getValue("b"));
+				var lang = item.language.split(" ")[0] + "-" + script;
+				parallelTitles.push([value, lang]);
+			}
+		}
+	}, this);
+	if(baseTitle.length) {
+		if(item.itemType == "film") {
+			item.distributor = this._clean(baseTitle);
+		} 
+		else {
+			item.publisher = this._clean(baseTitle);
+		}
+	}
+	parallelTitles.forEach(function(t) {
+		if(item.itemType == "film") {
+			this._setMultiField(item, "distributor", t[0], t[1]);
+		} 
+		else {
+			this._setMultiField(item, "publisher", t[0], t[1]);
+		}
+	}, this);
+
+	// Extract date
+	var value = record.getValue(Marc.Marc21.Tags.PUBLICATION_DISTRIBUTION_ETC_IMPRINT, "c",
+			{fieldJoin: " / "});
+	if(value) {
+		item.date = this._pullNumber(value);
+	}
+
+};
+
+
+Marc.Marc21MultilingualImportConverter.prototype._getTitle = function(record, item) {
+	var titleFields = record.getFields(Marc.Marc21.Tags.TITLE_STATEMENT);
+	var baseTitle = "";
+	var parallelTitles = [];
+	titleFields.forEach(function(titleField){
+		var value = titleField.getValue("ab");
+		if(baseTitle.length) {
+			baseTitle += " / ";
+		}
+		baseTitle += value;
+		//Check for linked field
+		var linkedField = this._getLinkedField(titleField);
+		if(linkedField) {
+			var script = this._getLinkScript(linkedField);
+			if(script) {
+				var value = this._clean(linkedField.getValue("ab"));
+				var lang = item.language.split(" ")[0] + "-" + script;
+				parallelTitles.push([value, lang]);
+			}
+		}
+	}, this);
+	if(baseTitle.length) {
+		item.title = baseTitle;
+	}
+	parallelTitles.forEach(function(t) {
+		this._setMultiField(item, "title", t[0], t[1]);
+	}, this);
+};
+
 
 
 /**
@@ -2660,19 +2958,28 @@ Marc.UnimarcMultilingualImportConverter = function() {
 Marc.UnimarcMultilingualImportConverter.prototype = new Marc.UnimarcImportConverter;
 Marc.UnimarcMultilingualImportConverter.prototype.constructor = Marc.UnimarcMultilingualImportConverter;
 
-Marc.UnimarcMultilingualImportConverter.prototype._getLanguage = function(record, item) {
-	var value = record.getValue(Marc.Unimarc.Tags.LANGUAGE_OF_THE_ITEM, "a");
-	if(value) {
-		item.language = value.split(" ")[0];
-	}
-	//Original language?
-	value = record.getValue(Marc.Unimarc.Tags.LANGUAGE_OF_THE_ITEM, "c");
-	if(value) {
-		item.notes.push({note: "Original language: " + value});
-	}
-};
+//Marc.UnimarcMultilingualImportConverter.prototype._getLanguage = function(record, item) {
+//	var value = record.getValue(Marc.Unimarc.Tags.LANGUAGE_OF_THE_ITEM, "a");
+//	if(value) {
+//		item.language = value.split(" ")[0];
+//	}
+//	//Original language?
+//	value = record.getValue(Marc.Unimarc.Tags.LANGUAGE_OF_THE_ITEM, "c");
+//	if(value) {
+//		item.notes.push({note: "Original language: " + value});
+//	}
+//};
 
 
+/**
+ * Get multilingual titles. Handles three cases: <ul>
+ * <li>$d-subfields in field 200, with subsequent $z subfields containing the langugae code</li>
+ * <li>510 fields containing parallel titles, with $z subfields containing the langugae code.
+ * When $z is missing, assume the calaging language.</li>
+ * <li>Multiple 200 fields with $7 subfields holding a script identifier. The item's
+ * main language is assumed to be the title's language.</li>
+ * </ul> 
+ */
 Marc.UnimarcMultilingualImportConverter.prototype._getTitle = function(record, item) {
 	var value = false, lang, script;
 	var defLang = item.language.split(" ")[0];
@@ -2779,9 +3086,13 @@ Marc.Converters = {
 				return new Marc.UnimarcImportConverter();
 			}
 		case "marc21":
-			return new Marc.Marc21ImportConverter();
 		default:
-			return new Marc.ImportConverter();
+			if(multilingual) {
+				return new Marc.Marc21MultilingualImportConverter();
+			}
+			else {
+				return new Marc.ImportConverter();
+			}
 		}
 	},
 	
