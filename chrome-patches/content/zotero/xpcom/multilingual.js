@@ -1,5 +1,4 @@
-/*
- * Utilities for multilingual support.
+/* Utilities for multilingual support.
  */
 
 // XXXZ Some changes needed to move to a new, purely
@@ -26,14 +25,27 @@
 // - Set up a mapping layer for 639-2 tags not
 //   known to IANA Language Subtag Registry.
 
+/**
+ * @namespace Singleton object validating lang-script identifiers.
+ */
 Zotero.ZlsValidator = new function () {
 	this._cache = {};
 
-	/** Validate and normalize a lang tag. Optionally does script sniffing. */
+	/** Validate and normalize a language-script tag. Optionally does script sniffing.
+	 * @param {String} tag a language-script tag, e.g. en, en-US, ru-Zyyy. If the script
+	 * tag is unknown or private (Qxxx) and the text parameter is supplied,
+	 * the method will attempt to auto-detect the text's script.
+	 * @param {String} [text] sample text used to auto-detect the script
+	 * @returns {boolean} true if a valid language/script pair was found. This
+	 * does not necessarily mean that the input tag was valid, just that the
+	 * internal lookup returned valid {@link tagdata}.
+	 * */
 	this.validate = function (tag, text) {
-		Zotero.debug("Zotero.ZlsValidator.validate:", 3);
 		this.tag = tag;
 		this.text = text;
+		/** Holds the tag data after successful validation. 
+		 * @type object[]
+		 * */
 		this.tagdata = false;
 		this.remnant = [];
 		if (this._cache[tag]) {
@@ -62,6 +74,7 @@ Zotero.ZlsValidator = new function () {
 		}
 	};
 
+	/** @private */
 	this.getPrimary = function () {
 		var primary_subtag = false, invalid = false;
 		var grandpaws = [
@@ -112,11 +125,12 @@ Zotero.ZlsValidator = new function () {
 		return this.tagdata;
 	};
 
-	/*
+	/**
 	 * Take a number representing a required tag length (2 or 3, by the
 	 * current standard) as argument.
 	 * 
 	 * Return true if a valid tag is found 
+	 * @private */
 	 */
 	this.testPrimary = function(len) {
 		var primary_subtag;
@@ -140,12 +154,13 @@ Zotero.ZlsValidator = new function () {
 		}
 	};
 
-	/*
+	/**
 	 * Take a string representing a subtag as argument.
 	 * 
 	 * Set the subtag object as the first-position value in
 	 * self.tagdata if found.  Otherwise, set self.tagdata
 	 * to false.
+	 * @private
 	 */
 	this.checkPrimarySql = function (primary) {
 		var sql = 'SELECT TA.value AS subtag, D.value AS description FROM zlsSubtags S '
@@ -168,6 +183,10 @@ Zotero.ZlsValidator = new function () {
 		}
 	};
 
+	/**
+	 * Attempt to detect the IANA script for a given string.
+	 * @returns {String} a valid IANA script tag, if script detection was successful
+	 */
 	this.detectScript = function(text) {
 		if(text) {
 			Zotero.debug("Detecting script from " + text);
@@ -187,6 +206,7 @@ Zotero.ZlsValidator = new function () {
 		Zotero.debug("No script detected");
 	};
 	
+	/** @private */
 	this.getScript = function () {
 		if (!this.remnant.length || this.remnant[0][0]=="Q" || this.remnant[0] == "Zyyy") {
 			//Script sniffing?
@@ -216,7 +236,7 @@ Zotero.ZlsValidator = new function () {
 		};
 	};
 
-
+	/** @private */
 	this.getRegion = function () {
 		if (!this.remnant.length) {
 			return;
@@ -234,7 +254,7 @@ Zotero.ZlsValidator = new function () {
 		}
 	};
 
-
+	/** @private */
 	this.getVariant = function () {
 		if (!this.remnant.length) {
 			return;
@@ -279,9 +299,16 @@ Zotero.ZlsValidator = new function () {
 	};
 };
 
-
+/**
+ * @namespace Utilities supporting multilingual features
+ */
 Zotero.Multi = function(){};
 
+/** From the raw data of a dependent creator entry, return the master creator index and the
+ * servant language.
+ * @param {String} s the raw data
+ * @returns {array} [master index, servantLang]
+ */
 Zotero.Multi.parseServantLang = function (s) {
 	var m, o, i;
 	m = s.match(/^#([0-9]{3})([0-9]{2})[-0-9a-zA-Z]+/);
@@ -294,6 +321,14 @@ Zotero.Multi.parseServantLang = function (s) {
 	}
 }
 
+/**
+ * Mangles master index and servantLang info into a creator's lastName property.
+ * @param {object} fields a creator with unmangled fields
+ * @param {number} fields.masterIndex
+ * @param {String} fields.servantLang
+ * @param {String} fields.lastName
+ * @returns {object} a copy of fields, but with masterIndex and servantLang mangled into the lastName property
+ */
 Zotero.Multi.mangle = function (fields) {
 	// Format is:
 	//   #00105ja-jpThis is a pen.
@@ -332,6 +367,10 @@ Zotero.Multi.mangle = function (fields) {
 	return newfields;
 }
 
+/** Strip multilanguage marks from a creator string.
+ * @param {String} a multi-creator string (#00105en_USDoe, John)
+ * @returns {String} the data portion only
+ */
 Zotero.Multi.stripMark = function (s) {
 	var m, o;
 	m = s.match(/^#[0-9]{3}([0-9]{2})[-0-9a-zA-Z]+/);
