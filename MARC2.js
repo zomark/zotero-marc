@@ -2186,6 +2186,9 @@ Marc.Marc21ImportConverter.prototype._getLinkScript = function(field) {
 	if(linkData && linkData[3]) {
 		return Marc.Marc21.Scripts[linkData[3].substr(1)];
 	}
+	else {
+		return "Zyyy";
+	}
 };
 
 /** Number extraction */
@@ -3041,7 +3044,7 @@ Marc.UnimarcMultilingualImportConverter.prototype._getTitle = function(record, i
  * @namespace Import/ExportConverters utilities. */
 Marc.Converters = {
 	/** Check whether this Zotero environment is multilingual.
-	 * @returns {Boolean"
+	 * @returns {Boolean}
 	 * */
 	_isMultilingual : function() {
 		return "undefined" != typeof new Zotero.Item().multi;
