@@ -2975,7 +2975,7 @@ Marc.UnimarcMultilingualImportConverter.prototype.constructor = Marc.UnimarcMult
  * Get multilingual titles. Handles three cases: <ul>
  * <li>$d-subfields in field 200, with subsequent $z subfields containing the langugae code</li>
  * <li>510 fields containing parallel titles, with $z subfields containing the langugae code.
- * When $z is missing, assume the calaging language.</li>
+ * When $z is missing, assume the cataloging language.</li>
  * <li>Multiple 200 fields with $7 subfields holding a script identifier. The item's
  * main language is assumed to be the title's language.</li>
  * </ul> 
@@ -3034,6 +3034,47 @@ Marc.UnimarcMultilingualImportConverter.prototype._getTitle = function(record, i
 			commit.call(this);
 		}
 	}, this);
+};
+
+Marc.UnimarcMultilingualImportConverter.prototype._getEdition = function(record, item) {
+	var defLang = item.language.split(" ")[0];
+
+	var value = record.getValue(Marc.Unimarc.Tags.EDITION_STATEMENT, "ab",
+			{subfieldJoin: ", ", fieldJoin: " / "});
+	if(value) {
+		item.edition = value;
+	}
+	
+	var fields = record.getFields(Marc.Unimarc.Tags.PUBLICATION_DISTRIBUTION_ETC);
+	fields.forEach(function(field) {
+		var lang;
+		var script = Marc.Unimarc.Scripts[field.getValue("7")];
+		if(script) {
+			lang = defLang + "-" + script;
+		}
+		else {
+			lang = defLang;
+		}
+		
+		value = field.getValue("a");
+		if(value) {
+			this._setMultiField(item, "place", value, lang);
+		}
+		
+		value = field.getValue("c");
+		if(value) {
+			var fieldName = item.itemType == "film" ? "distributor" : "publisher";
+			this._setMultiField(item, fieldName, value, lang);
+		}
+
+	}, this);
+
+	value = record.getValue(Marc.Unimarc.Tags.PUBLICATION_DISTRIBUTION_ETC, "d",
+			{fieldJoin: " / ", subfieldJoin: ", ", suppressDuplicates: true});
+	if(value) {
+		item.date = value;
+	}
+
 };
 
 
@@ -3275,8 +3316,8 @@ Marc.Config.setTypeOptions();
 
 //Public API
 
-//Debugging
-Marc.IO.setMaxImportRecords(10);
+//Debugging: limit import set size
+//Marc.IO.setMaxImportRecords(10);
 
 /**
  * Detect binary record leader.
