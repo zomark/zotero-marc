@@ -1613,6 +1613,7 @@ Zotero.Translate.prototype._itemDone = function(item, attachedTo) {
 			
 			if(data) {						// if field has content
 				if(field == "creators") {		// creators are a special case
+					var backOffset = 0;
 					for(var j in data) {
 						// try to assign correct creator type
 						if(data[j].creatorType) {
@@ -1630,10 +1631,10 @@ Zotero.Translate.prototype._itemDone = function(item, attachedTo) {
 						// Patch code by Florian Ziche.
 						var langTag = data[j].servantLang;
 						if (langTag) {
-							if(Zotero.ZlsValidator.validate(langTag)) {
+							if(Zotero.ZlsValidator.validate(langTag, data[j].lastName)) {
 								langTag = [Zotero.ZlsValidator.tagdata[i].subtag for (i in Zotero.ZlsValidator.tagdata)].join("-");
 							} else {
-								Zotero.debug("Language validation failed for creator tag "+langTag);
+								backOffset += -1;
 								continue;
 							}
 						}
@@ -1644,7 +1645,7 @@ Zotero.Translate.prototype._itemDone = function(item, attachedTo) {
 								lastName: data[j].lastName,
 								fieldMode: 1,
 								servantLang: langTag,
-								masterIndex: data[j].masterIndex
+								masterIndex: data[j].masterIndex + backOffset
 							};
 						}
 						// Two-field mode
@@ -1653,7 +1654,7 @@ Zotero.Translate.prototype._itemDone = function(item, attachedTo) {
 								firstName: data[j].firstName,
 								lastName: data[j].lastName,
 								servantLang: langTag,
-								masterIndex: data[j].masterIndex
+								masterIndex: data[j].masterIndex + backOffset
 							};
 						}
 						
@@ -1674,7 +1675,7 @@ Zotero.Translate.prototype._itemDone = function(item, attachedTo) {
 							var creatorID = creator.save();
 						}
 						
-						newItem.setCreator(j, creator, creatorTypeID);
+						newItem.setCreator(parseInt(j,10) + backOffset, creator, creatorTypeID);
 					}
 				} else if(field == "seeAlso") {
 					newItem.translateSeeAlso = data;
@@ -1721,7 +1722,7 @@ Zotero.Translate.prototype._itemDone = function(item, attachedTo) {
 			// Normalize lang
 			// Patch code by Florian Ziche.
 			var langTag = item.multi[i].lang;
-			if(Zotero.ZlsValidator.validate(langTag)) {
+			if(Zotero.ZlsValidator.validate(langTag, item.multi[i].val)) {
 				langTag = [Zotero.ZlsValidator.tagdata[i].subtag for (i in Zotero.ZlsValidator.tagdata)].join("-");
 			} else {
 				Zotero.debug("Language validation failed for field "+fieldName+" tag "+langTag);

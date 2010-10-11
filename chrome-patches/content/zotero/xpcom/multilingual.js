@@ -29,9 +29,11 @@
 Zotero.ZlsValidator = new function () {
 	this._cache = {};
 
-	this.validate = function (tag) {
+	/** Validate and normalize a lang tag. Optionally does script sniffing. */
+	this.validate = function (tag, text) {
 		Zotero.debug("Zotero.ZlsValidator.validate:", 3);
 		this.tag = tag;
+		this.text = text;
 		this.tagdata = false;
 		this.remnant = [];
 		if (this._cache[tag]) {
@@ -45,13 +47,17 @@ Zotero.ZlsValidator = new function () {
 			this.getPrimary();
 			this.getScript();
 			this.getRegion();
-			// Need to use a loop here.
+			// Need to use a loop here, but it must
+			// always terminate, even if unmatched
+			// items remain. Loop within getVariant()
+			// itself seems safest.
 			this.getVariant();
 			this._cache[tag] = this.tagdata;
 			Zotero.debug("Tagdata:", 3);
 			Zotero.debug(this.tagdata, 3);
 			return true;
 		} catch (e) {
+			Zotero.debug("Language tag validation failed: "+e);
 			return false;
 		}
 	};
@@ -85,14 +91,14 @@ Zotero.ZlsValidator = new function () {
 				// Fix up ISO 639-2 codes that may not appear in
 				// the IANA Subtag Registry.  Fault reported by
 				// Avram Lyon in connection with MARC translators.
-				Zotero.debug(this.remnant);
-//				if (this.remnant.length == 1) {
-					var sql = 'SELECT iana FROM isoTagMap WHERE iso=?';
-					var res = Zotero.DB.valueQuery(sql, [this.remnant[0]]);
-					if (res) {
-						this.remnant[0] = res;
-					}
-//				}
+				//
+				// Need to continue processing for script tags
+				// pointed out by Florian Ziche.
+				var sql = 'SELECT iana FROM isoTagMap WHERE iso=?';
+				var res = Zotero.DB.valueQuery(sql, [this.remnant[0]]);
+				if (res) {
+					this.remnant[0] = res;
+				}
 				var testlen = this.remnant[0].length;
 			}
 			this.testPrimary(2);
@@ -162,9 +168,40 @@ Zotero.ZlsValidator = new function () {
 		}
 	};
 
+	this.detectScript = function(text) {
+		if(text) {
+			Zotero.debug("Detecting script from " + text);
+			var sql = "SELECT script from unicodeScriptMap "
+				+ "WHERE fromCode<=? AND toCode>=?";
+			for(var i = 0; i < text.length; i++) {
+				var charCode = text.charCodeAt(i);
+				var res = Zotero.DB.rowQuery(sql, [charCode, charCode]);
+				Zotero.debug("Running query " + sql
+						+ " with " + charCode);
+				if(res) {
+					Zotero.debug("Detected script: " + res.script);
+					return res.script;
+				}
+			}
+		}
+		Zotero.debug("No script detected");
+	};
+	
 	this.getScript = function () {
-		if (!this.remnant.length) {
-			return;
+		if (!this.remnant.length || this.remnant[0][0]=="Q" || this.remnant[0] == "Zyyy") {
+			//Script sniffing?
+			if(this.text) {
+				var script = this.detectScript(this.text);
+				if(script) {
+					this.remnant[0] = script;
+				}
+				else {
+					return;
+				}
+			}
+			else {
+				return;
+			}
 		}
 		var sql = 'SELECT TA.value AS subtag, D.value AS description FROM zlsSubtags S '
 			+ 'LEFT JOIN zlsSubTagData TA ON S.subtag=TA.id '
@@ -202,6 +239,15 @@ Zotero.ZlsValidator = new function () {
 		if (!this.remnant.length) {
 			return;
 		}
+		// This will cause a small amount of thrashing when invalid
+		// tags interfere with further processing. The overhead is
+		// probably acceptable, though.
+		for (var i = 0, ilen = this.remnant.length; i < ilen; i += 1) {
+			this._getVariant();
+		}
+	};
+	
+	this._getVariant = function () {
 		var myprefix = [];
 		for (var i = 0, ilen = this.tagdata.length; i < ilen; i += 1) {
 			if (this.tagdata[i].type === 'variant') {
@@ -209,6 +255,8 @@ Zotero.ZlsValidator = new function () {
 					throw "Repeat use of variant subtag";
 				}
 			}
+			// If relaxing of prefix restraint works out well, we won't
+			// need to do this.
 			if (this.tagdata[i].type !== 'region') {
 				myprefix.push(this.tagdata[i].subtag);
 			}
@@ -219,8 +267,10 @@ Zotero.ZlsValidator = new function () {
 			+ 'LEFT JOIN zlsSubTagData TY ON S.type=TY.id '
 			+ 'LEFT JOIN zlsSubTagData PR ON S.prefix=PR.id '
 			+ 'LEFT JOIN zlsSubTagData D ON S.description=D.id '
-			+ 'WHERE TY.value=? AND TA.value=? AND (S.prefix IS NULL OR PR.value=?)';
-		var res = Zotero.DB.rowQuery(sql,['variant',this.remnant[0],myprefix]);		
+			+ 'WHERE TY.value=? AND TA.value=?';
+			// Releasing prefix restraint to align this with UI menus
+			// + 'WHERE TY.value=? AND TA.value=? AND (S.prefix IS NULL OR PR.value=?)';
+		var res = Zotero.DB.rowQuery(sql,['variant',this.remnant[0]]);		
 		if (res) {
 			res.type = 'variant';
 			this.tagdata.push(res);
