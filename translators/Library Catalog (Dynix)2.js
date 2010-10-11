@@ -133,11 +133,11 @@ function extractMarcFields(doc) {
 function postprocessItem(item, record, doc) {
 	var uri = doc.location.href;
 
-	var domain = uri.match(/https?:\/\/([^/]+)/);
+	var domain = uri.match(/https?:\/\/([^\/]+)/);
 	item.libraryCatalog = domain[1]+" Library Catalog";
 
 	// 20091210 : We try to get a permalink on the record
-	var perma = uri.match(/(https?:\/\/[^/]+.*ipac\.jsp\?).*(uri\=[^&]*)/);
+	var perma = uri.match(/(https?:\/\/[^\/]+.*ipac\.jsp\?).*(uri\=[^&]*)/);
 	var profile = uri.match(/(profile\=[^&]*)/);
 	if (perma && perma[1] && perma[2]) {
 		var permalink = perma[1] + perma[2];

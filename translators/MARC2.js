@@ -1149,8 +1149,8 @@ Marc.Record.prototype = {
 	setLeader : function(data) {
 		if(data) {
 			this._leader = new Marc.Record.Leader(data);
-			return this._leader;
 		}
+		return this.getLeader();
 	},
 
 	_addField : function(field) {
@@ -1176,7 +1176,8 @@ Marc.Record.prototype = {
 	},
 	
 	_createLeader : function() {
-		this._leader = new Marc.Record.Leader();
+		var leader = new Marc.Record.Leader();
+		return leader;
 	},
 	
 	_sortFields : function() {
@@ -1242,7 +1243,7 @@ Marc.Record.prototype = {
 	dump : function() {
 		this._sortFields();
 		var str = "MARC record:";
-		str += "\n" + this._leader.debugString();
+		str += "\n" + this.getLeader().debugString();
 		for(var j in this._fields) {
 			str += "\n" + this._fields[j].debugString();
 		}
@@ -1262,14 +1263,10 @@ Marc.Record.Leader.prototype = {
 	constructor: Marc.Record.Leader,
 	/** Default data. */
 	_getDefaultData : function() {
-		var data = Zotero.Utilities.lpad("", " ", 24);
-		data[6] = 'a';
-		data[7] = 'm';
-		data[10] = '2';
-		data[11] = '2';
-		data[20] = '4';
-		data[21] = '5';
-		data[22] = '0';
+		var data = Zotero.Utilities.lpad("", " ", 5)
+		+ "am  22"
+		+ Zotero.Utilities.lpad("", " ", 8);
+		return data;
 	},
 	
 	/**
@@ -2342,7 +2339,7 @@ Marc.Marc21ImportConverter.prototype._getEdition = function(record, item) {
  * Constructs a multilingual Marc-21 import converter.
  * @class ImportConverter implementation for records in Marc-21 format.
  * Makes use of Zotero's multilingual features wherever possible.
- * @augments Marc.ImportConverter 
+ * @augments Marc.Marc21ImportConverter 
  * */
 Marc.Marc21MultilingualImportConverter = function() {
 };
@@ -2954,7 +2951,7 @@ Marc.UnimarcImportConverter.prototype._getNotes = function(record, item) {
  * Constructs a multilingual Unimarc import converter.
  * @class ImportConverter implementation for records in Unimarc format.
  * Makes use of Zotero's multilingual features wherever possible.
- * @augments Marc.ImportConverter 
+ * @augments Marc.UnimarkImportConverter 
  * */
 Marc.UnimarcMultilingualImportConverter = function() {
 };
@@ -3223,6 +3220,7 @@ Marc.Importer.prototype = {
 	parseFields : function(data) {
 		var record = Marc.Records.newRecord();
 		data.forEach(function(field) {
+			Zotero.debug(field);
 			if(!field.tag || field.tag == "000" || field.tag == "LDR") {
 				record.setLeader(field.value);
 			}
