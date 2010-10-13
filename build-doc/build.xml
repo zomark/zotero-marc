@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="latin1"?>
+
+<project default="help" name="zotero-doc">
+
+	<property file="${basedir}/default.properties"/>
+	<property name="tmpdir" value="${java.io.tmpdir}/${ant.project.name}" />
+	<property name="toolkitdir" value="${basedir}/jsdoc-toolkit/"/>
+	<property name="zotero-root" value="${basedir}/.."/>
+	<property name="doc-root" value="${basedir}/../jsdoc"/>
+	
+	<path id="jsdoc.path">
+		<pathelement path="${basedir}/classes"/>
+		<fileset dir="${toolkitdir}">
+			<include name="jsdoctoolkit*.jar"/>
+			<include name="java/classes/*.jar"/>
+		</fileset>
+	</path>
+	
+	<taskdef name="jsdoc" 
+		classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit" 
+		classpathref="jsdoc.path"/>
+
+	<taskdef name="jsdocTranslators" 
+		classname="org.zotero.tools.ant.JSDocTranslatorTask" 
+		classpathref="jsdoc.path"/>
+
+		
+	<target name="help">
+		<echo message=""/>
+		<echo message="Build file: ${ant.file}"/>
+		<echo message="basedir: ${basedir}"/>
+		<echo message="tmpdir: ${tmpdir}"/>
+		<echo message="Zotero root: ${zotero-root}"/>
+		<echo message="Output folder: ${doc-root}"/>
+		<echo message="JSDoc toolkit: ${toolkitdir}"/>
+		<echo message="-------------------------------------------------------------"/>
+		<echo message=""/>
+		<echo message=" available targets are:"/>
+		<echo message=""/>
+		<echo message="   translators      --> translators JSDoc"/>
+		<echo message="-------------------------------------------------------------"/>
+		<echo message=""/>
+	</target>
+	
+	<target name="translators">
+		<jsdocTranslators inputdir="${zotero-root}/translators" 
+			outputdir="${doc-root}/translators"/>
+	</target>
+
+
+	<target name="xpcom">
+		<jsdoc jsdochome="${toolkitdir}"
+			inputdir="${zotero-root}/chrome/content/zotero/xpcom" 
+			outputdir="${doc-root}/xpcom/"
+			template="jsdoc"/>
+	</target>
+	
+</project>

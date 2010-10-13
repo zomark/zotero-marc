@@ -1,0 +1,21 @@
+Some tools for documenting Zotero JavaScript sources. Basically calls the bundled JSDoc on subtrees of the Zotero installation. Some extra processing is done for translators (it's no use simply running JSDoc over the entire translators folder).
+
+Requirements:
+	Ant
+	A Zotero source installation (from SVN)
+
+Basic usage:
+copy the entire build-doc into a zotero source tree, so that the folder structure is
+/[your-zotero-root]
+	/build-doc
+	/chrome
+	/translators
+	/...
+
+open a console window and cd into the build-doc folder
+
+call "ant xpcom" or "ant translators" to generate JSDoc for the translators, or the xpcom object
+
+the generated documentation will be stored in a new jsdoc folder below the zotero root
+
+Edit the default.properties or the build.xml as needed to change folders, or to add new documentation bundles.
