@@ -1,0 +1,31 @@
+// dot 2.26.3 on Windows 7 6.1
+// SchemaSpy rev Unknown
+digraph "charsets" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Arial"
+    fontsize="11"
+  ];
+  node [
+    fontname="Arial"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "charsets" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">charsets</TD></TR>
+      <TR><TD PORT="charsetID" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">charsetID</TD></TR>
+      <TR><TD PORT="charset" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">charset</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">168 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/charsets.html"
+    tooltip="charsets"
+  ];
+}
