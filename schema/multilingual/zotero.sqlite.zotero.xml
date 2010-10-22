@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="..\\db\\multilingual\\zotero.sqlite" schema="zotero" type="SQLite - 2.8.17">
+   <tables>
+      <table name="annotations" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="annotationID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_annotations_itemAttachments_itemID" implied="false" onDeleteCascade="false" table="itemAttachments"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="parent" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="textNode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="offset" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="x" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="5" name="y" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="6" name="cols" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="7" name="rows" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="8" name="text" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="9" name="collapsed" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="10" name="dateModified" nullable="true" remarks="" size="10" type="date"/>
+         <primaryKey column="annotationID" sequenceNumberInPK="1"/>
+         <index name="annotations_itemID" unique="false">
+            <column ascending="true" name="itemID"/>
+         </index>
+      </table>
+      <table name="baseFieldMappings" numRows="54" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemTypeID" foreignKey="FK_baseFieldMappings_itemTypes_itemTypeID" implied="false" onDeleteCascade="false" table="itemTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="baseFieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldID" foreignKey="FK_baseFieldMappings_fields_fieldID" implied="false" onDeleteCascade="false" table="fields"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="fieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldID" foreignKey="FK_baseFieldMappings_fields_fieldID" implied="false" onDeleteCascade="false" table="fields"/>
+         </column>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="baseFieldID" sequenceNumberInPK="2"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_baseFieldMappings_1" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="baseFieldID"/>
+            <column ascending="true" name="fieldID"/>
+         </index>
+         <index name="baseFieldMappings_baseFieldID" unique="false">
+            <column ascending="true" name="baseFieldID"/>
+         </index>
+         <index name="baseFieldMappings_fieldID" unique="false">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="baseFieldMappingsCombined" numRows="54" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="baseFieldID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="fieldID" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="baseFieldID" sequenceNumberInPK="2"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_baseFieldMappingsCombined_1" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="baseFieldID"/>
+            <column ascending="true" name="fieldID"/>
+         </index>
+         <index name="baseFieldMappingsCombined_baseFieldID" unique="false">
+            <column ascending="true" name="baseFieldID"/>
+         </index>
+         <index name="baseFieldMappingsCombined_fieldID" unique="false">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="charsets" numRows="168" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="charsetID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="charset" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="charset" sequenceNumberInPK="1"/>
+         <primaryKey column="charsetID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_charsets_1" unique="true">
+            <column ascending="true" name="charset"/>
+         </index>
+         <index name="charsets_charset" unique="false">
+            <column ascending="true" name="charset"/>
+         </index>
+      </table>
+      <table name="collectionItems" numRows="148" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="collectionID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="collectionID" foreignKey="FK_collectionItems_collections_collectionID" implied="false" onDeleteCascade="false" table="collections"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_collectionItems_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" defaultValue="0" digits="10" id="1" name="orderIndex" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="collectionID" sequenceNumberInPK="1"/>
+         <primaryKey column="itemID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_collectionItems_1" unique="true">
+            <column ascending="true" name="collectionID"/>
+            <column ascending="true" name="itemID"/>
+         </index>
+         <index name="itemID" unique="false">
+            <column ascending="true" name="itemID"/>
+         </index>
+      </table>
+      <table name="collections" numRows="1" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="collectionID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="collectionName" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="parentCollectionID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="collectionID" foreignKey="FK_collections_collections_collectionID" implied="false" onDeleteCascade="false" table="collections"/>
+         </column>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="2" name="dateAdded" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="3" name="dateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="4" name="clientDateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" digits="10" id="5" name="libraryID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="6" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <primaryKey column="collectionID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_collections_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+      <table name="creatorData" numRows="161" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="creatorDataID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="firstName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="lastName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="shortName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="3" name="fieldMode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="birthYear" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="creatorDataID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="creators" numRows="161" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="creatorID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="creatorDataID" nullable="false" remarks="" size="11" type="integer">
+            <parent column="creatorDataID" foreignKey="FK_creators_creatorData_creatorDataID" implied="false" onDeleteCascade="false" table="creatorData"/>
+         </column>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="1" name="dateAdded" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="2" name="dateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="3" name="clientDateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" digits="10" id="4" name="libraryID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="5" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <primaryKey column="creatorID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_creators_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+         <index name="creators_creatorDataID" unique="false">
+            <column ascending="true" name="creatorDataID"/>
+         </index>
+      </table>
+      <table name="creatorsMulti" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="creatorID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="creatorID" foreignKey="FK_creatorsMulti_creators_creatorID" implied="false" onDeleteCascade="false" table="creators"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="languageTagID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="creatorDataID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="creatorDataID" foreignKey="FK_creatorsMulti_creatorData_creatorDataID" implied="false" onDeleteCascade="false" table="creatorData"/>
+         </column>
+         <primaryKey column="creatorID" sequenceNumberInPK="1"/>
+         <primaryKey column="languageTagID" sequenceNumberInPK="2"/>
+         <primaryKey column="creatorID" sequenceNumberInPK="3"/>
+         <primaryKey column="languageTagID" sequenceNumberInPK="4"/>
+         <index name="sqlite_autoindex_creatorsMulti_1" unique="true">
+            <column ascending="true" name="creatorID"/>
+            <column ascending="true" name="languageTagID"/>
+         </index>
+      </table>
+      <table name="creatorTypes" numRows="29" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="creatorTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="creatorType" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="creatorTypeID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="customBaseFieldMappings" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="customItemTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="customItemTypeID" foreignKey="FK_customBaseFieldMappings_customItemTypes_customItemTypeID" implied="false" onDeleteCascade="false" table="customItemTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="baseFieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldID" foreignKey="FK_customBaseFieldMappings_fields_fieldID" implied="false" onDeleteCascade="false" table="fields"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="customFieldID" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="customItemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="baseFieldID" sequenceNumberInPK="2"/>
+         <primaryKey column="customFieldID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_customBaseFieldMappings_1" unique="true">
+            <column ascending="true" name="customItemTypeID"/>
+            <column ascending="true" name="baseFieldID"/>
+            <column ascending="true" name="customFieldID"/>
+         </index>
+         <index name="customBaseFieldMappings_baseFieldID" unique="false">
+            <column ascending="true" name="baseFieldID"/>
+         </index>
+         <index name="customBaseFieldMappings_customFieldID" unique="false">
+            <column ascending="true" name="customFieldID"/>
+         </index>
+      </table>
+      <table name="customFields" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="customFieldID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="fieldName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="label" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="customFieldID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="customItemTypeFields" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="customItemTypeID" nullable="false" remarks="" size="11" type="integer">
+            <parent column="customItemTypeID" foreignKey="FK_customItemTypeFields_customItemTypes_customItemTypeID" implied="false" onDeleteCascade="false" table="customItemTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="fieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldID" foreignKey="FK_customItemTypeFields_fields_fieldID" implied="false" onDeleteCascade="false" table="fields"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="customFieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="customFieldID" foreignKey="FK_customItemTypeFields_customFields_customFieldID" implied="false" onDeleteCascade="false" table="customFields"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="2" name="hide" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="orderIndex" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="customItemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="orderIndex" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_customItemTypeFields_1" unique="true">
+            <column ascending="true" name="customItemTypeID"/>
+            <column ascending="true" name="orderIndex"/>
+         </index>
+         <index name="customItemTypeFields_customFieldID" unique="false">
+            <column ascending="true" name="customFieldID"/>
+         </index>
+         <index name="customItemTypeFields_fieldID" unique="false">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="customItemTypes" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="customItemTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="typeName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="label" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" defaultValue="1" digits="10" id="2" name="display" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="icon" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="customItemTypeID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="deletedItems" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="0" name="dateDeleted" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <index name="deletedItems_dateDeleted" unique="false">
+            <column ascending="true" name="dateDeleted"/>
+         </index>
+      </table>
+      <table name="fieldFormats" numRows="3" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="fieldFormatID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="regex" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="isInteger" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="fieldFormatID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="fields" numRows="104" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="fieldID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="fieldName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="fieldFormatID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldFormatID" foreignKey="FK_fields_fieldFormats_fieldFormatID" implied="false" onDeleteCascade="false" table="fieldFormats"/>
+         </column>
+         <primaryKey column="fieldID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="fieldsCombined" numRows="104" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="fieldID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="fieldName" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="label" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="fieldFormatID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="custom" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_fieldsCombined_1" unique="true">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="fieldsMulti" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="fieldID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="languageTagID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="valueID" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="2"/>
+         <primaryKey column="languageTagID" sequenceNumberInPK="3"/>
+         <primaryKey column="itemID" sequenceNumberInPK="4"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="5"/>
+         <primaryKey column="languageTagID" sequenceNumberInPK="6"/>
+         <index name="sqlite_autoindex_fieldsMulti_1" unique="true">
+            <column ascending="true" name="itemID"/>
+            <column ascending="true" name="fieldID"/>
+            <column ascending="true" name="languageTagID"/>
+         </index>
+      </table>
+      <table name="fileTypeMimeTypes" numRows="30" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="fileTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fileTypeID" foreignKey="FK_fileTypeMimeTypes_fileTypes_fileTypeID" implied="false" onDeleteCascade="false" table="fileTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="mimeType" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="fileTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="mimeType" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_fileTypeMimeTypes_1" unique="true">
+            <column ascending="true" name="fileTypeID"/>
+            <column ascending="true" name="mimeType"/>
+         </index>
+         <index name="fileTypeMimeTypes_mimeType" unique="false">
+            <column ascending="true" name="mimeType"/>
+         </index>
+      </table>
+      <table name="fileTypes" numRows="7" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="fileTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="fileType" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="fileType" sequenceNumberInPK="1"/>
+         <primaryKey column="fileTypeID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_fileTypes_1" unique="true">
+            <column ascending="true" name="fileType"/>
+         </index>
+         <index name="fileTypes_fileType" unique="false">
+            <column ascending="true" name="fileType"/>
+         </index>
+      </table>
+      <table name="fulltextItems" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_fulltextItems_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="version" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="indexedPages" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="totalPages" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="indexedChars" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="totalChars" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <index name="fulltextItems_version" unique="false">
+            <column ascending="true" name="version"/>
+         </index>
+      </table>
+      <table name="fulltextItemWords" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="wordID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="wordID" foreignKey="FK_fulltextItemWords_fulltextWords_wordID" implied="false" onDeleteCascade="false" table="fulltextWords"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_fulltextItemWords_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <primaryKey column="wordID" sequenceNumberInPK="1"/>
+         <primaryKey column="itemID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_fulltextItemWords_1" unique="true">
+            <column ascending="true" name="wordID"/>
+            <column ascending="true" name="itemID"/>
+         </index>
+         <index name="fulltextItemWords_itemID" unique="false">
+            <column ascending="true" name="itemID"/>
+         </index>
+      </table>
+      <table name="fulltextWords" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="wordID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="word" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="word" sequenceNumberInPK="1"/>
+         <primaryKey column="wordID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_fulltextWords_1" unique="true">
+            <column ascending="true" name="word"/>
+         </index>
+      </table>
+      <table name="groupItems" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="createdByUserID" nullable="false" remarks="" size="11" type="integer">
+            <parent column="userID" foreignKey="FK_groupItems_users_userID" implied="false" onDeleteCascade="false" table="users"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="lastModifiedByUserID" nullable="false" remarks="" size="11" type="integer">
+            <parent column="userID" foreignKey="FK_groupItems_users_userID" implied="false" onDeleteCascade="false" table="users"/>
+         </column>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="groups" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="groupID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="libraryID" nullable="false" remarks="" size="11" type="integer">
+            <parent column="libraryID" foreignKey="FK_groups_libraries_libraryID" implied="false" onDeleteCascade="false" table="libraries"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="name" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="description" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="3" name="editable" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="filesEditable" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="groupID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_groups_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+         </index>
+      </table>
+      <table name="highlights" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="highlightID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_highlights_itemAttachments_itemID" implied="false" onDeleteCascade="false" table="itemAttachments"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="startParent" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="startTextNode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="startOffset" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="endParent" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="5" name="endTextNode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="6" name="endOffset" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="7" name="dateModified" nullable="true" remarks="" size="10" type="date"/>
+         <primaryKey column="highlightID" sequenceNumberInPK="1"/>
+         <index name="highlights_itemID" unique="false">
+            <column ascending="true" name="itemID"/>
+         </index>
+      </table>
+      <table name="isoTagMap" numRows="204" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="iso" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="0" name="iana" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="iso" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_isoTagMap_1" unique="true">
+            <column ascending="true" name="iso"/>
+         </index>
+      </table>
+      <table name="itemAttachments" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemAttachments_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="sourceItemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemAttachments_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="linkMode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="mimeType" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="3" name="charsetID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="path" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="5" name="originalPath" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" defaultValue="0" digits="10" id="6" name="syncState" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="7" name="storageModTime" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="8" name="storageHash" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <index name="itemAttachments_mimeType" unique="false">
+            <column ascending="true" name="mimeType"/>
+         </index>
+         <index name="itemAttachments_sourceItemID" unique="false">
+            <column ascending="true" name="sourceItemID"/>
+         </index>
+         <index name="itemAttachments_syncState" unique="false">
+            <column ascending="true" name="syncState"/>
+         </index>
+      </table>
+      <table name="itemCreators" numRows="186" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemCreators_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="creatorID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="creatorID" foreignKey="FK_itemCreators_creators_creatorID" implied="false" onDeleteCascade="false" table="creators"/>
+         </column>
+         <column autoUpdated="false" defaultValue="1" digits="10" id="1" name="creatorTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="creatorTypeID" foreignKey="FK_itemCreators_creatorTypes_creatorTypeID" implied="false" onDeleteCascade="false" table="creatorTypes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="0" digits="10" id="2" name="orderIndex" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <primaryKey column="creatorID" sequenceNumberInPK="2"/>
+         <primaryKey column="creatorTypeID" sequenceNumberInPK="3"/>
+         <primaryKey column="orderIndex" sequenceNumberInPK="4"/>
+         <index name="sqlite_autoindex_itemCreators_1" unique="true">
+            <column ascending="true" name="itemID"/>
+            <column ascending="true" name="creatorID"/>
+            <column ascending="true" name="creatorTypeID"/>
+            <column ascending="true" name="orderIndex"/>
+         </index>
+      </table>
+      <table name="itemData" numRows="1325" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemData_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="fieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldID" foreignKey="FK_itemData_fields_fieldID" implied="false" onDeleteCascade="false" table="fields"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="valueID" nullable="true" remarks="" size="65536" type="varchar">
+            <parent column="valueID" foreignKey="FK_itemData_itemDataValues_valueID" implied="false" onDeleteCascade="false" table="itemDataValues"/>
+         </column>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_itemData_1" unique="true">
+            <column ascending="true" name="itemID"/>
+            <column ascending="true" name="fieldID"/>
+         </index>
+         <index name="itemData_fieldID" unique="false">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="itemDataValues" numRows="838" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="valueID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="value" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="value" sequenceNumberInPK="1"/>
+         <primaryKey column="valueID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_itemDataValues_1" unique="true">
+            <column ascending="true" name="value"/>
+         </index>
+      </table>
+      <table name="itemNotes" numRows="222" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemNotes_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="sourceItemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemNotes_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="note" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="title" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <index name="itemNotes_sourceItemID" unique="false">
+            <column ascending="true" name="sourceItemID"/>
+         </index>
+      </table>
+      <table name="items" numRows="380" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="itemTypeID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="1" name="dateAdded" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="2" name="dateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="3" name="clientDateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" digits="10" id="4" name="libraryID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="libraryID" foreignKey="FK_items_libraries_libraryID" implied="false" onDeleteCascade="false" table="libraries"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="5" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <primaryKey column="itemID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_items_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+      <table name="itemSeeAlso" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemSeeAlso_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="linkedItemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemSeeAlso_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <primaryKey column="linkedItemID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_itemSeeAlso_1" unique="true">
+            <column ascending="true" name="itemID"/>
+            <column ascending="true" name="linkedItemID"/>
+         </index>
+         <index name="itemSeeAlso_linkedItemID" unique="false">
+            <column ascending="true" name="linkedItemID"/>
+         </index>
+      </table>
+      <table name="itemTags" numRows="196" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemID" foreignKey="FK_itemTags_items_itemID" implied="false" onDeleteCascade="false" table="items"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="tagID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="tagID" foreignKey="FK_itemTags_tags_tagID" implied="false" onDeleteCascade="false" table="tags"/>
+         </column>
+         <primaryKey column="itemID" sequenceNumberInPK="1"/>
+         <primaryKey column="tagID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_itemTags_1" unique="true">
+            <column ascending="true" name="itemID"/>
+            <column ascending="true" name="tagID"/>
+         </index>
+         <index name="itemTags_tagID" unique="false">
+            <column ascending="true" name="tagID"/>
+         </index>
+      </table>
+      <table name="itemTypeCreatorTypes" numRows="123" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemTypeID" foreignKey="FK_itemTypeCreatorTypes_itemTypes_itemTypeID" implied="false" onDeleteCascade="false" table="itemTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="creatorTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="creatorTypeID" foreignKey="FK_itemTypeCreatorTypes_creatorTypes_creatorTypeID" implied="false" onDeleteCascade="false" table="creatorTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="primaryField" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="creatorTypeID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_itemTypeCreatorTypes_1" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="creatorTypeID"/>
+         </index>
+         <index name="itemTypeCreatorTypes_creatorTypeID" unique="false">
+            <column ascending="true" name="creatorTypeID"/>
+         </index>
+      </table>
+      <table name="itemTypeFields" numRows="582" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="itemTypeID" foreignKey="FK_itemTypeFields_itemTypes_itemTypeID" implied="false" onDeleteCascade="false" table="itemTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="fieldID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="fieldID" foreignKey="FK_itemTypeFields_fields_fieldID" implied="false" onDeleteCascade="false" table="fields"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="hide" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="orderIndex" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="2"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="3"/>
+         <primaryKey column="orderIndex" sequenceNumberInPK="4"/>
+         <index name="sqlite_autoindex_itemTypeFields_1" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="orderIndex"/>
+         </index>
+         <index name="sqlite_autoindex_itemTypeFields_2" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="fieldID"/>
+         </index>
+         <index name="itemTypeFields_fieldID" unique="false">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="itemTypeFieldsCombined" numRows="582" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="fieldID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="hide" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="orderIndex" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="fieldID" sequenceNumberInPK="2"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="3"/>
+         <primaryKey column="orderIndex" sequenceNumberInPK="4"/>
+         <index name="sqlite_autoindex_itemTypeFieldsCombined_1" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="orderIndex"/>
+         </index>
+         <index name="sqlite_autoindex_itemTypeFieldsCombined_2" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+            <column ascending="true" name="fieldID"/>
+         </index>
+         <index name="itemTypeFieldsCombined_fieldID" unique="false">
+            <column ascending="true" name="fieldID"/>
+         </index>
+      </table>
+      <table name="itemTypes" numRows="36" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="typeName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="templateItemTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" defaultValue="1" digits="10" id="2" name="display" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="itemTypesCombined" numRows="36" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="itemTypeID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="typeName" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" defaultValue="1" digits="10" id="1" name="display" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="custom" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="itemTypeID" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_itemTypesCombined_1" unique="true">
+            <column ascending="true" name="itemTypeID"/>
+         </index>
+      </table>
+      <table name="languageTagData" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="languageTagID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="languageTag" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="languageTag" sequenceNumberInPK="1"/>
+         <primaryKey column="languageTagID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_languageTagData_1" unique="true">
+            <column ascending="true" name="languageTag"/>
+         </index>
+      </table>
+      <table name="libraries" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="libraryID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="libraryType" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="proxies" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="proxyID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="multiHost" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="autoAssociate" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="scheme" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="proxyID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="proxyHosts" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="hostID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="proxyID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="proxyID" foreignKey="FK_proxyHosts_proxies_proxyID" implied="false" onDeleteCascade="false" table="proxies"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="1" name="hostname" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="hostID" sequenceNumberInPK="1"/>
+         <index name="proxyHosts_proxyID" unique="false">
+            <column ascending="true" name="proxyID"/>
+         </index>
+      </table>
+      <table name="relations" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="libraryID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="subject" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="predicate" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="object" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="3" name="clientDateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <primaryKey column="subject" sequenceNumberInPK="1"/>
+         <primaryKey column="predicate" sequenceNumberInPK="2"/>
+         <primaryKey column="object" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_relations_1" unique="true">
+            <column ascending="true" name="subject"/>
+            <column ascending="true" name="predicate"/>
+            <column ascending="true" name="object"/>
+         </index>
+         <index name="relations_object" unique="false">
+            <column ascending="true" name="object"/>
+         </index>
+      </table>
+      <table name="savedSearchConditions" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="savedSearchID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="savedSearchID" foreignKey="FK_savedSearchConditions_savedSearches_savedSearchID" implied="false" onDeleteCascade="false" table="savedSearches"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="searchConditionID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="condition" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="operator" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="3" name="value" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="4" name="required" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="savedSearchID" sequenceNumberInPK="1"/>
+         <primaryKey column="searchConditionID" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_savedSearchConditions_1" unique="true">
+            <column ascending="true" name="savedSearchID"/>
+            <column ascending="true" name="searchConditionID"/>
+         </index>
+      </table>
+      <table name="savedSearches" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="savedSearchID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="savedSearchName" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="1" name="dateAdded" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="2" name="dateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="3" name="clientDateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" digits="10" id="4" name="libraryID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="5" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <primaryKey column="savedSearchID" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_savedSearches_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+      <table name="settings" numRows="1" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="setting" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="0" name="key" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="value" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="setting" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_settings_1" unique="true">
+            <column ascending="true" name="setting"/>
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+      <table name="storageDeleteLog" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="libraryID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="timestamp" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <index name="sqlite_autoindex_storageDeleteLog_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+         <index name="storageDeleteLog_timestamp" unique="false">
+            <column ascending="true" name="timestamp"/>
+         </index>
+      </table>
+      <table name="syncDeleteLog" numRows="955" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="syncObjectTypeID" nullable="false" remarks="" size="11" type="integer">
+            <parent column="syncObjectTypeID" foreignKey="FK_syncDeleteLog_syncObjectTypes_syncObjectTypeID" implied="false" onDeleteCascade="false" table="syncObjectTypes"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="libraryID" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="timestamp" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="syncObjectTypeID" sequenceNumberInPK="1"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="2"/>
+         <primaryKey column="key" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_syncDeleteLog_1" unique="true">
+            <column ascending="true" name="syncObjectTypeID"/>
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+         <index name="syncDeleteLog_timestamp" unique="false">
+            <column ascending="true" name="timestamp"/>
+         </index>
+      </table>
+      <table name="syncObjectTypes" numRows="6" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="syncObjectTypeID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="name" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="syncObjectTypeID" sequenceNumberInPK="1"/>
+         <index name="syncObjectTypes_name" unique="false">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="tags" numRows="164" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="tagID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="name" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="type" nullable="false" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="2" name="dateAdded" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="3" name="dateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="2010-10-21 17:15:58" digits="10" id="4" name="clientDateModified" nullable="false" remarks="" size="30" type="timestamp"/>
+         <column autoUpdated="false" digits="10" id="5" name="libraryID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="6" name="key" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="1"/>
+         <primaryKey column="key" sequenceNumberInPK="2"/>
+         <primaryKey column="libraryID" sequenceNumberInPK="3"/>
+         <primaryKey column="name" sequenceNumberInPK="4"/>
+         <primaryKey column="type" sequenceNumberInPK="5"/>
+         <primaryKey column="tagID" sequenceNumberInPK="6"/>
+         <index name="sqlite_autoindex_tags_1" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="name"/>
+            <column ascending="true" name="type"/>
+         </index>
+         <index name="sqlite_autoindex_tags_2" unique="true">
+            <column ascending="true" name="libraryID"/>
+            <column ascending="true" name="key"/>
+         </index>
+      </table>
+      <table name="transactionLog" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="transactionID" nullable="true" remarks="" size="11" type="integer">
+            <parent column="transactionID" foreignKey="FK_transactionLog_transactions_transactionID" implied="false" onDeleteCascade="false" table="transactions"/>
+         </column>
+         <column autoUpdated="false" digits="10" id="0" name="field" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="value" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="transactionID" sequenceNumberInPK="1"/>
+         <primaryKey column="field" sequenceNumberInPK="2"/>
+         <primaryKey column="value" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_transactionLog_1" unique="true">
+            <column ascending="true" name="transactionID"/>
+            <column ascending="true" name="field"/>
+            <column ascending="true" name="value"/>
+         </index>
+      </table>
+      <table name="transactions" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="transactionID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="transactionSetID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="context" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="action" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="transactionID" sequenceNumberInPK="1"/>
+         <index name="transactions_transactionSetID" unique="false">
+            <column ascending="true" name="transactionSetID"/>
+         </index>
+      </table>
+      <table name="transactionSets" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="transactionSetID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="event" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="id" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="transactionSetID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="translatorCache" numRows="307" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="leafName" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="0" name="translatorJSON" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="code" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="2" name="lastModifiedTime" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="leafName" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_translatorCache_1" unique="true">
+            <column ascending="true" name="leafName"/>
+         </index>
+      </table>
+      <table name="unicodeScriptMap" numRows="197" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="fromCode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="toCode" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="script" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="fromCode" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_unicodeScriptMap_1" unique="true">
+            <column ascending="true" name="fromCode"/>
+         </index>
+      </table>
+      <table name="users" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="userID" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="username" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="userID" sequenceNumberInPK="1"/>
+      </table>
+      <table name="version" numRows="9" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="schema" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="0" name="version" nullable="false" remarks="" size="11" type="integer"/>
+         <primaryKey column="schema" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_version_1" unique="true">
+            <column ascending="true" name="schema"/>
+         </index>
+         <index name="schema" unique="false">
+            <column ascending="true" name="schema"/>
+         </index>
+      </table>
+      <table name="zlsPreferences" numRows="0" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="profile" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="0" name="param" nullable="false" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="tag" nullable="false" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="profile" sequenceNumberInPK="1"/>
+         <primaryKey column="param" sequenceNumberInPK="2"/>
+         <primaryKey column="tag" sequenceNumberInPK="3"/>
+         <index name="sqlite_autoindex_zlsPreferences_1" unique="true">
+            <column ascending="true" name="profile"/>
+            <column ascending="true" name="param"/>
+            <column ascending="true" name="tag"/>
+         </index>
+         <index name="zlsPreferences_param" unique="false">
+            <column ascending="true" name="param"/>
+            <column ascending="true" name="profile"/>
+         </index>
+      </table>
+      <table name="zlsSubtagData" numRows="16919" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="id" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="value" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+      </table>
+      <table name="zlsSubtags" numRows="8673" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="seq" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="0" name="subtag" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="1" name="tag" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="2" name="type" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="3" name="suppressscript" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="4" name="scope" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="5" name="preferredvalue" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="6" name="macrolanguage" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="7" name="added" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="8" name="description" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="9" name="deprecated" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="10" name="comment" nullable="true" remarks="" size="11" type="integer"/>
+         <column autoUpdated="false" digits="10" id="11" name="prefix" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="seq" sequenceNumberInPK="1"/>
+      </table>
+      <table name="zlsTags" numRows="17" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="tag" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="0" name="nickname" nullable="true" remarks="" size="65536" type="varchar"/>
+         <column autoUpdated="false" digits="10" id="1" name="parent" nullable="true" remarks="" size="65536" type="varchar"/>
+         <primaryKey column="tag" sequenceNumberInPK="1"/>
+         <index name="sqlite_autoindex_zlsTags_1" unique="true">
+            <column ascending="true" name="tag"/>
+         </index>
+         <index name="zlsTags_nickname" unique="false">
+            <column ascending="true" name="nickname"/>
+         </index>
+         <index name="zlsTags_parent" unique="false">
+            <column ascending="true" name="parent"/>
+         </index>
+      </table>
+      <table name="zoteroDummyTable" numRows="1" remarks="" schema="" type="TABLE">
+         <column autoUpdated="false" digits="10" id="-1" name="id" nullable="true" remarks="" size="11" type="integer"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+      </table>
+   </tables>
+</database>
