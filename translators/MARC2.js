@@ -46,7 +46,10 @@ Marc.Delimiters = {
 Marc.Config = {
 	setTypeOptions : function() {
 		for(var type in Marc.Types) {
-			Zotero.addOption(Marc.Types[type], false);
+			// XXX: Did this go away at some point?
+			if (Zotero.addOption) {
+				Zotero.addOption(Marc.Types[type], false);
+			}
 		}
 	},
 
@@ -1222,7 +1225,8 @@ Marc.Record.prototype = {
 			var field = fields[j];
 			var fieldResult = field.getValue(subfieldIndexes, processing);
 			if(fieldResult && fieldResult.length) {
-				if(!processing.suppressDuplicates || !Zotero.Utilities.inArray(fieldResult, fieldResults)) {
+				if(!processing.suppressDuplicates || 
+					!fieldResults.indexOf(fieldResult) === -1) {
 					fieldResults.push(fieldResult);
 				}
 			}
@@ -1598,7 +1602,8 @@ Marc.Record.Field.prototype = {
 			else {
 				subfield = subfield.getContent();
 			}
-			if(!processing.suppressDuplicates || !Zotero.Utilities.inArray(subfield, results)) {
+			if(!processing.suppressDuplicates || 
+				!results.indexOf(subfield) === -1) {
 				results.push(subfield);
 			}
 		}
