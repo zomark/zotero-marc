@@ -46,7 +46,10 @@ Marc.Delimiters = {
 Marc.Config = {
 	setTypeOptions : function() {
 		for(var type in Marc.Types) {
-			Zotero.addOption(Marc.Types[type], false);
+			// XXX: Did this go away at some point?
+			if (Zotero.addOption) {
+				Zotero.addOption(Marc.Types[type], false);
+			}
 		}
 	},
 
@@ -1222,7 +1225,8 @@ Marc.Record.prototype = {
 			var field = fields[j];
 			var fieldResult = field.getValue(subfieldIndexes, processing);
 			if(fieldResult && fieldResult.length) {
-				if(!processing.suppressDuplicates || !Zotero.Utilities.inArray(fieldResult, fieldResults)) {
+				if(!processing.suppressDuplicates || 
+					!fieldResults.indexOf(fieldResult) === -1) {
 					fieldResults.push(fieldResult);
 				}
 			}
@@ -1598,7 +1602,8 @@ Marc.Record.Field.prototype = {
 			else {
 				subfield = subfield.getContent();
 			}
-			if(!processing.suppressDuplicates || !Zotero.Utilities.inArray(subfield, results)) {
+			if(!processing.suppressDuplicates || 
+				!results.indexOf(subfield) === -1) {
 				results.push(subfield);
 			}
 		}
@@ -3402,3 +3407,94 @@ function doExport() {
 }
 
 
+
+
+/** BEGIN TEST CASES **/
+var testCases = [
+	{
+		"type": "import",
+		"input": "01268cam  2200265   450 001002100000009004700021010000800068039001900076100004100095101001800136102000700154105001800161106000600179200018300185200020300368205005400571205005000625210005500675210005900730302001700789600007900806676003000885700004800915801003900963\u001eFRBNF373190500000000\u001ehttp://catalogue.bnf.fr/ark:/12148/cb37319050s\u001e  \u001fbBr.\u001e  \u001foGEA\u001fa005541579\u001e  \u001fa19980402d1993    m  y1frea0103    ||\u001e2 \u001faara\u001fafre\u001fgara\u001e  \u001faEG\u001e  \u001fa||||z   00|y|\u001e  \u001far\u001e1 \u001f6a01\u001f7ba\u001faAdūnīs muntaḥilan\u001fbTexte imprimé\u001fedirāsaẗ fī al-istiḥwāḏ al-adabī wa irtiǧāliyyaẗ al-tarǧamaẗ yasbiquhā : Mā huwa al-Tanaṣṣ\u001ffKāẓim Ǧihād\u001e1 \u001f6a01\u001f7fa\u001faأدونيس منتحلا\u001fbTexte imprimé\u001feدراسة في الاستحواذ الأدبيّ وارتجالية الترجمة يسبقها ز ما هو التناصّ ؟\u001ffكاظم جهاد\u001e  \u001faṬabʿaẗ ǧadīda munaqqaḥaẗ wa mazīdaẗ\u001e  \u001faطبعة جديدة منقّحة ومزيدة\u001e  \u001f6a01\u001f7ba\u001faAl-Qāhiraẗ\u001fcMaktabaẗ Madbūlī\u001fd1993\u001e  \u001f6a01\u001f7fa\u001faالقاهرة\u001fcمكتبة مدبولي\u001fd1993\u001e  \u001faArabe\u001faLatin\u001e |\u001f311888124\u001faAdonis\u001ff1930-....\u001f312042895\u001fxCritique et interprétation\u001f2rameau\u001e  \u001fa892.716 09 (critique)\u001fv21\u001e |\u001f311904870\u001faǦihād\u001fbKāẓim\u001ff1955-....\u001f4070\u001e 0\u001faFR\u001fbBNF\u001fc19980402\u001fgAFNOR\u001f2intermrc\u001e\u001d",
+		"items": [
+			{
+				"itemType": "book",
+				"creators": [
+					{
+						"firstName": "Kāẓim",
+						"lastName": "Ǧihād",
+						"creatorType": "author"
+					}
+				],
+				"notes": [
+					{
+						"title": "MARC code",
+						"note": "<pre>00001268cam  2200265   450 </br>001FRBNF373190500000000</br>009http://catalogue.bnf.fr/ark:/12148/cb37319050s</br>010##$bBr.</br>039##$oGEA$a005541579</br>100##$a19980402d1993    m  y1frea0103    ||</br>1012#$aara$afre$gara</br>102##$aEG</br>105##$a||||z   00|y|</br>106##$ar</br>2001#$6a01$7ba$aAdūnīs muntaḥilan$bTexte imprimé$edirāsaẗ fī al-istiḥwāḏ al-adabī wa irtiǧāliyyaẗ al-tarǧamaẗ yasbiquhā : Mā huwa al-Tanaṣṣ$fKāẓim Ǧihād</br>2001#$6a01$7fa$aأدونيس منتحلا$bTexte imprimé$eدراسة في الاستحواذ الأدبيّ وارتجالية الترجمة يسبقها ز ما هو التناصّ ؟$fكاظم جهاد</br>205##$aṬabʿaẗ ǧadīda munaqqaḥaẗ wa mazīdaẗ</br>205##$aطبعة جديدة منقّحة ومزيدة</br>210##$6a01$7ba$aAl-Qāhiraẗ$cMaktabaẗ Madbūlī$d1993</br>210##$6a01$7fa$aالقاهرة$cمكتبة مدبولي$d1993</br>302##$aArabe$aLatin</br>600#|$311888124$aAdonis$f1930-....$312042895$xCritique et interprétation$2rameau</br>676##$a892.716 09 (critique)$v21</br>700#|$311904870$aǦihād$bKāẓim$f1955-....$4070</br>801#0$aFR$bBNF$c19980402$gAFNOR$2intermrc</br></pre>"
+					}
+				],
+				"tags": [
+					"Adonis (1930-....)"
+				],
+				"seeAlso": [],
+				"attachments": [],
+				"language": "ara fre",
+				"shortTitle": "Adūnīs muntaḥilan",
+				"title": "Adūnīs muntaḥilan : dirāsaẗ fī al-istiḥwāḏ al-adabī wa irtiǧāliyyaẗ al-tarǧamaẗ yasbiquhā : Mā huwa al-Tanaṣṣ / أدونيس منتحلا : دراسة في الاستحواذ الأدبيّ وارتجالية الترجمة يسبقها ز ما هو التناصّ ؟",
+				"edition": "Ṭabʿaẗ ǧadīda munaqqaḥaẗ wa mazīdaẗ / طبعة جديدة منقّحة ومزيدة",
+				"place": "Al-Qāhiraẗ / القاهرة",
+				"publisher": "Maktabaẗ Madbūlī / مكتبة مدبولي",
+				"callNumber": "Dewey: 892.716 09 (critique)"
+			}
+		]
+	},
+	{
+		"type": "import",
+		"input": "01841cam a2200385Ma 45\u00020001000700000005001700007008004100024010001700065035002300082035001800105040003000123043001200153050001500165049001500180100003900195245028100234260005900515300006100574500019500635500014500830510003000975510002701005510004501032500002601077610004401103600004001147600004801187650004501235610004501280852005801325946003101383910001001414994001201424947001901436\u001e790862\u001e20080120004008.0\u001e880726s1687    sp bf         000 0cspa d\u001e  \u001fa   03021876 \u001e  \u001fa(OCoLC)ocm29051663\u001e  \u001fa(NBYdb)790862\u001e  \u001faMNU\u001fcMNU\u001fdOCL\u001fdDIBAM\u001fdIBV\u001e  \u001fas-py---\u001e0 \u001faF2681\u001fb.X3\u001e  \u001faIBVA\u001flbklr\u001e1 \u001faXarque, Francisco,\u001fdca. 1609-1691.\u001e10\u001faInsignes missioneros de la Compañia de Jesus en la prouincia del Paraguay :\u001fbestado presente de sus missiones en Tucuman, Paraguay, y Rio de la Plata, que comprehende su distrito /\u001fcpor el doct. d. Francisco Xarque, dean de la Catredral [sic] de Santa Maria de Albarrazin ...\u001e  \u001faEn Pamplona :\u001fbPor Juan Micòn, Impressor,\u001fcaño 1687.\u001e  \u001fa[24], 432 p., [1] folded leaf of plates :\u001fbmap ;\u001fc22 cm.\u001e  \u001faBrunet and Graesse both mention a map of Paraguay; this copy has a map of Chile with title: Tabula geocraphica [sic] regni Chile / studio et labore P. Procuratoris Chilensis Societatis Jesu.\u001e  \u001faIn 3 books; the first two are biographies of Jesuits, Simon Mazeta and Francisco Diaz Taño, the 3rd deals with Jesuit missions in Paraguay.\u001e4 \u001faNUC pre-1956,\u001fcNX0000604.\u001e4 \u001faSabin,\u001fc105716 (v.29).\u001e4 \u001faPalau y Dulcet (2nd ed.),\u001fc123233 (v.7).\u001e  \u001faHead and tail pieces.\u001e20\u001faJesuits\u001fzParaguay\u001fvEarly works to 1800.\u001e10\u001faMasseta, Simon,\u001fdca. 1582-ca. 1656.\u001e10\u001faCuellar y Mosquera, Gabriel de,\u001fd1593-1677.\u001e 0\u001faMissions\u001fzParaguay\u001fvEarly works to 1800.\u001e20\u001faJesuits\u001fvBiography\u001fvEarly works to 1800.\u001e8 \u001fbvau,ayer\u001fkVAULT\u001fhAyer\u001fi1343\u001fi.J515\u001fiP211\u001fiX2\u001fi1687\u001ft1\u001e  \u001faOCLC RECON PROJECT\u001farc3758\u001e  \u001fa35535\u001e  \u001fa02\u001fbIBV\u001e  \u001faMARS\u001fa20071227\u001e\u001d",
+		"items": [
+			{
+				"itemType": "book",
+				"creators": [
+					{
+						"firstName": "Francisco",
+						"lastName": "Xarque",
+						"creatorType": "author"
+					}
+				],
+				"notes": [],
+				"tags": [
+					"Masseta, Simon",
+					"Cuellar y Mosquera, Gabriel de",
+					"Missions",
+					"Paraguay"
+				],
+				"seeAlso": [],
+				"attachments": [],
+				"title": "Insignes missioneros de la Compañia de Jesus en la prouincia del Paraguay: estado presente de sus missiones en Tucuman, Paraguay, y Rio de la Plata, que comprehende su distrito",
+				"place": "En Pamplona",
+				"publisher": "Por Juan Micòn, Impressor",
+				"date": "1687",
+				"numPages": "24",
+				"callNumber": "VAULT Ayer 1343 .J515 P211 X2 1687"
+			}
+		]
+	},
+	{
+		"type": "import",
+		"input": "01240cam a2200349Ia 4500001000800000005001700008008004100025020002400066020002100090020002900111020002600140035002100166035002000187040002800207049002200235050002200257082002100279100003700300245005100337260004700388300005300435600003900488650004700527880005000574880007300624880006500697880005700762910002100819948002600840949001200866994001200878\u001e6207671\u001e20090410051602.0\u001e081111s2008    ru abf        000 0brusod\u001e  \u001fa9785170545421 (AST)\u001e  \u001fa5170545428 (AST)\u001e  \u001fa9785271215537 (Astrelʹ)\u001e  \u001fa5271215539 (Astrelʹ)\u001e  \u001fa(OCoLC)270882057\u001e  \u001faucoclc270882057\u001e  \u001faCLE\u001fcCLE\u001fdZQP\u001fdLNQ\u001fdCLU\u001e  \u001faCLUR\u001flL0100817147\u001e14\u001faPG3465\u001fb.B95 2008\u001e04\u001fa891.70092\u001fbB\u001f222\u001e1 \u001f6880-01\u001faBykov, Dmitriĭ,\u001fd1967-\u001e10\u001f6880-02\u001faByl li Gorʹkiĭ? /\u001fcDmitriĭ Bykov.\u001e  \u001f6880-03\u001faMoskva :\u001fbAST :\u001fbAstrelʹ,\u001fcc2008.\u001e  \u001fa348 p., [16] p. of plates :\u001fbill., map ;\u001fc21 cm.\u001e10\u001f6880-04\u001faGorky, Maksim,\u001fd1868-1936.\u001e 0\u001faAuthors, Russian\u001fy20th century\u001fvBiography.\u001e1 \u001f6100-01/(N\u001faБыков, Дмитрий,\u001fd1967-\u001e10\u001f6245-02/(N\u001faБыл ли Горький? /\u001fcДмитрий Быков.\u001e  \u001f6260-03/(N\u001faМосква :\u001fbАСТ :\u001fbАстрель,\u001fcc2008.\u001e10\u001f6600-04/(N\u001faГорький, Максим,\u001fd1868-1936.\u001e  \u001fashz 090409\u001faMARS\u001e  \u001facmc\u001fbshz\u001fc20090409\u001fd2\u001e  \u001fa6207671\u001e  \u001faC0\u001fbCLU\u001e\u001d",
+		"items": [
+			{
+				"itemType": "book",
+				"title": "Byl li Gorʹkiĭ? / Dmitriĭ Bykov.",
+				"creators": [],
+				"notes": [
+					{
+						"title": "MARC code",
+						"note": "<pre>00001240cam a2200349Ia 4500</br>0016207671</br>00520090410051602.0</br>008081111s2008    ru abf        000 0brusod</br>020##$a9785170545421 (AST)</br>020##$a5170545428 (AST)</br>020##$a9785271215537 (Astrelʹ)</br>020##$a5271215539 (Astrelʹ)</br>035##$a(OCoLC)270882057</br>035##$aucoclc270882057</br>040##$aCLE$cCLE$dZQP$dLNQ$dCLU</br>049##$aCLUR$lL0100817147</br>05014$aPG3465$b.B95 2008</br>08204$a891.70092$bB$222</br>1001#$6880-01$aBykov, Dmitriĭ,$d1967-</br>24510$6880-02$aByl li Gorʹkiĭ? /$cDmitriĭ Bykov.</br>260##$6880-03$aMoskva :$bAST :$bAstrelʹ,$cc2008.</br>300##$a348 p., [16] p. of plates :$bill., map ;$c21 cm.</br>60010$6880-04$aGorky, Maksim,$d1868-1936.</br>650#0$aAuthors, Russian$y20th century$vBiography.</br>8801#$6100-01/(N$aБыков, Дмитрий,$d1967-</br>88010$6245-02/(N$aБыл ли Горький? /$cДмитрий Быков.</br>880##$6260-03/(N$aМосква :$bАСТ :$bАстрель,$cc2008.</br>88010$6600-04/(N$aГорький, Максим,$d1868-1936.</br>910##$ashz 090409$aMARS</br>948##$acmc$bshz$c20090409$d2</br>949##$a6207671</br>994##$aC0$bCLU</br></pre>"
+					}
+				],
+				"tags": [],
+				"seeAlso": [],
+				"attachments": []
+			}
+		]
+	}
+]
+/** END TEST CASES **/
